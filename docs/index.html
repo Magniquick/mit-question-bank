@@ -307,7 +307,6 @@ a {
 
 .folder-view {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -316,94 +315,143 @@ a {
   display: none;
 }
 
-.folder-node {
+.folder-shell {
   border-radius: 24px;
   border: 1px solid var(--line);
-  background: rgba(255, 252, 247, 0.72);
+  background: rgba(255, 252, 247, 0.8);
   box-shadow: var(--shadow);
   overflow: hidden;
 }
 
-.folder-node + .folder-node {
-  margin-top: 12px;
-}
-
-.folder-node summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 18px 20px;
+.folder-toolbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 14px;
-}
-
-.folder-node summary::-webkit-details-marker {
-  display: none;
-}
-
-.folder-label {
-  display: inline-flex;
+  gap: 16px;
   align-items: center;
-  gap: 10px;
-  font-weight: 700;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(32, 23, 20, 0.03);
 }
 
-.folder-label::before {
-  content: ">";
-  font-size: 0.82rem;
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.breadcrumb button {
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.breadcrumb button:hover,
+.breadcrumb button:focus-visible {
   color: var(--accent);
-  transform: rotate(0deg);
-  transition: transform 160ms ease;
 }
 
-.folder-node[open] > summary .folder-label::before {
-  transform: rotate(90deg);
+.breadcrumb-sep {
+  color: rgba(32, 23, 20, 0.35);
 }
 
-.folder-count {
+.folder-share {
   color: var(--ink-soft);
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
 
-.folder-children {
-  padding: 0 16px 16px 16px;
+.folder-list {
+  display: grid;
 }
 
-.file-list {
+.folder-row {
   display: grid;
-  gap: 10px;
-  margin-top: 10px;
+  grid-template-columns: minmax(0, 1.7fr) minmax(120px, 0.5fr) minmax(120px, 0.8fr);
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(32, 23, 20, 0.07);
+  background: transparent;
+  text-align: left;
 }
 
-.file-item {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(32, 23, 20, 0.04);
-  border: 1px solid rgba(32, 23, 20, 0.06);
+.folder-row.is-header {
+  border-top: 0;
+  background: rgba(32, 23, 20, 0.025);
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+button.folder-row {
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.folder-row-link {
   text-decoration: none;
-  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
 }
 
-.file-item:hover,
-.file-item:focus-visible {
-  transform: translateY(-1px);
+button.folder-row:hover,
+button.folder-row:focus-visible,
+.folder-row-link:hover,
+.folder-row-link:focus-visible {
   background: rgba(142, 59, 46, 0.08);
-  border-color: rgba(142, 59, 46, 0.18);
 }
 
-.file-item strong {
-  font-size: 0.98rem;
-  line-height: 1.45;
+.folder-main {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
 }
 
-.file-item span {
+.folder-icon {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(142, 59, 46, 0.12);
+  color: var(--accent);
+  flex: 0 0 auto;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.folder-name {
+  min-width: 0;
+}
+
+.folder-name strong {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.folder-name span {
+  display: block;
+  margin-top: 2px;
   color: var(--ink-soft);
   font-size: 0.82rem;
+}
+
+.folder-cell {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
 }
 
 .paper-card {
@@ -511,7 +559,8 @@ a {
   .results-head,
   .filters,
   .results-grid,
-  .folder-view {
+  .folder-view,
+  .folder-row {
     grid-template-columns: 1fr;
   }
 
@@ -635,7 +684,15 @@ a {
         </section>
 
         <section id="results" class="results-grid" aria-label="Search results"></section>
-        <section id="folder-view" class="folder-view hidden" aria-label="Folder explorer"></section>
+        <section id="folder-view" class="folder-view hidden" aria-label="Folder explorer">
+          <div class="folder-shell">
+            <div class="folder-toolbar">
+              <div id="folder-breadcrumb" class="breadcrumb"></div>
+              <div id="folder-share" class="folder-share"></div>
+            </div>
+            <div id="folder-list" class="folder-list"></div>
+          </div>
+        </section>
       </main>
     </div>
 
@@ -658,6 +715,7 @@ const state = {
   filtered: [],
   view: "cards",
   visibleCards: 0,
+  folderPath: "",
   filters: {
     q: "",
     semester: "",
@@ -679,6 +737,9 @@ const elements = {
   status: document.getElementById("status"),
   results: document.getElementById("results"),
   folderView: document.getElementById("folder-view"),
+  folderBreadcrumb: document.getElementById("folder-breadcrumb"),
+  folderShare: document.getElementById("folder-share"),
+  folderList: document.getElementById("folder-list"),
   resultsTitle: document.getElementById("results-title"),
   activeFilters: document.getElementById("active-filters"),
   template: document.getElementById("result-card-template"),
@@ -698,6 +759,7 @@ const CARD_BATCH = 36;
 function readQuery() {
   const params = new URLSearchParams(window.location.search);
   state.view = params.get("view") === "folders" ? "folders" : "cards";
+  state.folderPath = params.get("folder") || "";
   state.filters.q = params.get("q") || "";
   state.filters.semester = params.get("semester") || "";
   state.filters.branch = params.get("branch") || "";
@@ -710,6 +772,10 @@ function writeQuery() {
 
   if (state.view !== "cards") {
     params.set("view", state.view);
+  }
+
+  if (state.folderPath) {
+    params.set("folder", state.folderPath);
   }
 
   Object.entries(state.filters).forEach(([key, value]) => {
@@ -825,90 +891,138 @@ function showStatus(message, hidden = false) {
   elements.status.classList.toggle("hidden", hidden);
 }
 
-function buildTree(entries) {
-  const root = { folders: new Map(), files: [] };
+function filteredFolderEntries() {
+  const folderPrefix = state.folderPath ? `${state.folderPath}/` : "";
+  return state.filtered.filter((entry) =>
+    state.folderPath ? entry.path === state.folderPath || entry.path.startsWith(folderPrefix) : true,
+  );
+}
+
+function currentFolderIndex(entries) {
+  const folders = new Map();
+  const files = [];
+  const prefix = state.folderPath ? `${state.folderPath}/` : "";
 
   entries.forEach((entry) => {
-    const parts = entry.path.split("/");
-    let current = root;
+    if (state.folderPath && !entry.path.startsWith(prefix)) {
+      return;
+    }
 
-    parts.slice(0, -1).forEach((segment) => {
-      if (!current.folders.has(segment)) {
-        current.folders.set(segment, { folders: new Map(), files: [] });
-      }
-      current = current.folders.get(segment);
-    });
+    const relativePath = state.folderPath ? entry.path.slice(prefix.length) : entry.path;
+    const parts = relativePath.split("/");
 
-    current.files.push(entry);
+    if (parts.length === 1) {
+      files.push(entry);
+      return;
+    }
+
+    const name = parts[0];
+    if (!folders.has(name)) {
+      folders.set(name, { name, path: prefix ? `${state.folderPath}/${name}` : name, count: 0 });
+    }
+    folders.get(name).count += 1;
   });
 
-  return root;
+  return {
+    folders: [...folders.values()].sort((left, right) => compareValues(left.name, right.name)),
+    files: files.sort((left, right) => compareValues(left.name, right.name)),
+  };
 }
 
-function branchFileCount(node) {
-  let total = node.files.length;
-  node.folders.forEach((child) => {
-    total += branchFileCount(child);
+function renderBreadcrumb() {
+  elements.folderBreadcrumb.innerHTML = "";
+
+  const rootButton = document.createElement("button");
+  rootButton.type = "button";
+  rootButton.textContent = "Archive";
+  rootButton.addEventListener("click", () => {
+    state.folderPath = "";
+    writeQuery();
+    renderResults();
   });
-  return total;
+  elements.folderBreadcrumb.append(rootButton);
+
+  const parts = state.folderPath ? state.folderPath.split("/") : [];
+  let current = "";
+
+  parts.forEach((part) => {
+    const sep = document.createElement("span");
+    sep.className = "breadcrumb-sep";
+    sep.textContent = "/";
+    elements.folderBreadcrumb.append(sep);
+
+    current = current ? `${current}/${part}` : part;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = part;
+    button.addEventListener("click", () => {
+      state.folderPath = current;
+      writeQuery();
+      renderResults();
+    });
+    elements.folderBreadcrumb.append(button);
+  });
 }
 
-function renderFolderNode(name, node, depth = 0) {
-  const wrapper = document.createElement("details");
-  wrapper.className = "folder-node";
-  wrapper.open = depth < 2;
+function renderFolderRow(item, type) {
+  if (type === "folder") {
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "folder-row";
 
-  const summary = document.createElement("summary");
+    const main = document.createElement("div");
+    main.className = "folder-main";
+    main.innerHTML = `
+      <span class="folder-icon">D</span>
+      <div class="folder-name">
+        <strong>${item.name}</strong>
+        <span>Open folder</span>
+      </div>
+    `;
 
-  const label = document.createElement("span");
-  label.className = "folder-label";
-  label.textContent = name;
+    const typeCell = document.createElement("div");
+    typeCell.className = "folder-cell";
+    typeCell.textContent = "Folder";
 
-  const count = document.createElement("span");
-  count.className = "folder-count";
-  count.textContent = `${branchFileCount(node)} files`;
+    const metaCell = document.createElement("div");
+    metaCell.className = "folder-cell";
+    metaCell.textContent = `${item.count} files`;
 
-  summary.append(label, count);
-  wrapper.append(summary);
-
-  const children = document.createElement("div");
-  children.className = "folder-children";
-
-  [...node.folders.entries()]
-    .sort(([left], [right]) => compareValues(left, right))
-    .forEach(([childName, childNode]) => {
-      children.append(renderFolderNode(childName, childNode, depth + 1));
+    row.append(main, typeCell, metaCell);
+    row.addEventListener("click", () => {
+      state.folderPath = item.path;
+      writeQuery();
+      renderResults();
     });
-
-  if (node.files.length) {
-    const fileList = document.createElement("div");
-    fileList.className = "file-list";
-
-    node.files
-      .slice()
-      .sort((left, right) => compareValues(left.name, right.name))
-      .forEach((entry) => {
-        const link = document.createElement("a");
-        link.className = "file-item";
-        link.href = entry.githubUrl;
-        link.target = "_blank";
-        link.rel = "noreferrer";
-
-        const title = document.createElement("strong");
-        title.textContent = entry.name.replace(/\.pdf$/i, "");
-
-        const meta = document.createElement("span");
-        meta.textContent = [entry.examType, entry.year, entry.path].filter(Boolean).join(" / ");
-
-        link.append(title, meta);
-        fileList.append(link);
-      });
-
-    children.append(fileList);
+    return row;
   }
 
-  wrapper.append(children);
-  return wrapper;
+  const link = document.createElement("a");
+  link.className = "folder-row folder-row-link";
+  link.href = item.githubUrl;
+  link.target = "_blank";
+  link.rel = "noreferrer";
+
+  const main = document.createElement("div");
+  main.className = "folder-main";
+  main.innerHTML = `
+    <span class="folder-icon">P</span>
+    <div class="folder-name">
+      <strong>${item.name.replace(/\.pdf$/i, "")}</strong>
+      <span>${item.subjectFolder || item.path}</span>
+    </div>
+  `;
+
+  const typeCell = document.createElement("div");
+  typeCell.className = "folder-cell";
+  typeCell.textContent = item.examType || "PDF";
+
+  const metaCell = document.createElement("div");
+  metaCell.className = "folder-cell";
+  metaCell.textContent = item.year || "Year unknown";
+
+  link.append(main, typeCell, metaCell);
+  return link;
 }
 
 function renderCards() {
@@ -958,19 +1072,81 @@ function renderCards() {
 }
 
 function renderFolderView() {
-  elements.folderView.innerHTML = "";
-  const tree = buildTree(state.filtered);
+  const entries = filteredFolderEntries();
+  const index = currentFolderIndex(entries);
 
-  [...tree.folders.entries()]
-    .sort(([left], [right]) => compareValues(left, right))
-    .forEach(([name, node]) => {
-      elements.folderView.append(renderFolderNode(name, node));
+  renderBreadcrumb();
+  elements.folderShare.textContent = state.folderPath || "Root folder";
+  elements.folderList.innerHTML = "";
+
+  const header = document.createElement("div");
+  header.className = "folder-row is-header";
+  header.innerHTML = "<div>Name</div><div>Type</div><div>Details</div>";
+  elements.folderList.append(header);
+
+  if (state.folderPath) {
+    const parts = state.folderPath.split("/");
+    const parentPath = parts.slice(0, -1).join("/");
+    const up = document.createElement("button");
+    up.type = "button";
+    up.className = "folder-row";
+    up.innerHTML = `
+      <div class="folder-main">
+        <span class="folder-icon">..</span>
+        <div class="folder-name">
+          <strong>Parent folder</strong>
+          <span>Go up one level</span>
+        </div>
+      </div>
+      <div class="folder-cell">Folder</div>
+      <div class="folder-cell">${parentPath || "Archive root"}</div>
+    `;
+    up.addEventListener("click", () => {
+      state.folderPath = parentPath;
+      writeQuery();
+      renderResults();
     });
+    elements.folderList.append(up);
+  }
+
+  index.folders.forEach((folder) => {
+    elements.folderList.append(renderFolderRow(folder, "folder"));
+  });
+
+  index.files.forEach((file) => {
+    elements.folderList.append(renderFolderRow(file, "file"));
+  });
+
+  if (!index.folders.length && !index.files.length) {
+    const empty = document.createElement("div");
+    empty.className = "folder-row";
+    empty.innerHTML = `
+      <div class="folder-main">
+        <span class="folder-icon">!</span>
+        <div class="folder-name">
+          <strong>Nothing here</strong>
+          <span>This folder is empty under the current filters.</span>
+        </div>
+      </div>
+      <div class="folder-cell">-</div>
+      <div class="folder-cell">Try clearing filters</div>
+    `;
+    elements.folderList.append(empty);
+  }
 }
 
 function renderResults() {
   state.filtered = state.entries.filter(matches);
   state.visibleCards = Math.min(Math.max(INITIAL_CARD_BATCH, 0), state.filtered.length);
+
+  if (state.folderPath) {
+    const validFolder = state.filtered.some((entry) => entry.path.startsWith(`${state.folderPath}/`));
+    if (!validFolder) {
+      state.folderPath = "";
+      writeQuery();
+    }
+  }
+
   elements.resultsTitle.textContent = `${state.filtered.length} paper${state.filtered.length === 1 ? "" : "s"} in view`;
 
   renderActiveFilters();
